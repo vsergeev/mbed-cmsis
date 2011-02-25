@@ -9,9 +9,9 @@
  * Copyright (C) 2009 ARM Limited. All rights reserved.
  *
  * @par
- * ARM Limited (ARM) is supplying this software for use with Cortex-M 
- * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * ARM Limited (ARM) is supplying this software for use with Cortex-M
+ * processor based microcontrollers.  This file can be freely distributed
+ * within development tools that are supporting such ARM based processors.
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -25,6 +25,11 @@
 
 #include <stdint.h>
 #include "LPC17xx.h"
+
+
+/** @addtogroup LPC17xx_System
+ * @{
+ */
 
 /*
 //-------- <<< Use Configuration Wizard in Context Menu >>> ------------------
@@ -280,6 +285,13 @@
 //
 // </e>
 */
+
+
+
+/** @addtogroup LPC17xx_System_Defines  LPC17xx System Defines
+  @{
+ */
+
 #define CLOCK_SETUP           1
 #define SCS_Val               0x00000020
 #define CLKSRCSEL_Val         0x00000001
@@ -298,19 +310,7 @@
 /*--------------------- Flash Accelerator Configuration ----------------------
 //
 // <e> Flash Accelerator Configuration
-//   <o1.0..1>   FETCHCFG: Fetch Configuration
-//               <0=> Instruction fetches from flash are not buffered
-//               <1=> One buffer is used for all instruction fetch buffering
-//               <2=> All buffers may be used for instruction fetch buffering
-//               <3=> Reserved (do not use this setting)
-//   <o1.2..3>   DATACFG: Data Configuration
-//               <0=> Data accesses from flash are not buffered
-//               <1=> One buffer is used for all data access buffering
-//               <2=> All buffers may be used for data access buffering
-//               <3=> Reserved (do not use this setting)
-//   <o1.4>      ACCEL: Acceleration Enable
-//   <o1.5>      PREFEN: Prefetch Enable
-//   <o1.6>      PREFOVR: Prefetch Override
+//   <o1.0..11>  Reserved
 //   <o1.12..15> FLASHTIM: Flash Access Time
 //               <0=> 1 CPU clock (for CPU clock up to 20 MHz)
 //               <1=> 2 CPU clocks (for CPU clock up to 40 MHz)
@@ -383,20 +383,20 @@
 /*----------------------------------------------------------------------------
   DEFINES
  *----------------------------------------------------------------------------*/
-    
+
 /*----------------------------------------------------------------------------
   Define clocks
  *----------------------------------------------------------------------------*/
 #define XTAL        (12000000UL)        /* Oscillator frequency               */
 #define OSC_CLK     (      XTAL)        /* Main oscillator frequency          */
-#define RTC_CLK     (   32000UL)        /* RTC oscillator frequency           */
+#define RTC_CLK     (   32768UL)        /* RTC oscillator frequency           */
 #define IRC_OSC     ( 4000000UL)        /* Internal RC oscillator frequency   */
 
 
 /* F_cco0 = (2 * M * F_in) / N  */
 #define __M               (((PLL0CFG_Val      ) & 0x7FFF) + 1)
 #define __N               (((PLL0CFG_Val >> 16) & 0x00FF) + 1)
-#define __FCCO(__F_IN)    ((2 * __M * __F_IN) / __N) 
+#define __FCCO(__F_IN)    ((2 * __M * __F_IN) / __N)
 #define __CCLK_DIV        (((CCLKCFG_Val      ) & 0x00FF) + 1)
 
 /* Determine core clock frequency according to settings */
@@ -405,7 +405,7 @@
         #define __CORE_CLK (__FCCO(OSC_CLK) / __CCLK_DIV)
     #elif ((CLKSRCSEL_Val & 0x03) == 2)
         #define __CORE_CLK (__FCCO(RTC_CLK) / __CCLK_DIV)
-    #else 
+    #else
         #define __CORE_CLK (__FCCO(IRC_OSC) / __CCLK_DIV)
     #endif
  #else
@@ -418,16 +418,33 @@
     #endif
  #endif
 
+ /**
+  * @}
+  */
 
+
+/** @addtogroup LPC17xx_System_Public_Variables  LPC17xx System Public Variables
+  @{
+ */
 /*----------------------------------------------------------------------------
   Clock Variable definitions
  *----------------------------------------------------------------------------*/
 uint32_t SystemCoreClock = __CORE_CLK;/*!< System Clock Frequency (Core Clock)*/
 
+/**
+ * @}
+ */
+
+
+/** @addtogroup LPC17xx_System_Public_Functions  LPC17xx System Public Functions
+  @{
+ */
 
 /*----------------------------------------------------------------------------
   Clock functions
  *----------------------------------------------------------------------------*/
+
+
 void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency      */
 {
   /* Determine clock frequency according to clock register values             */
@@ -435,19 +452,19 @@ void SystemCoreClockUpdate (void)            /* Get Core Clock Frequency      */
     switch (LPC_SC->CLKSRCSEL & 0x03) {
       case 0:                                /* Int. RC oscillator => PLL0    */
       case 3:                                /* Reserved, default to Int. RC  */
-        SystemCoreClock = (IRC_OSC * 
+        SystemCoreClock = (IRC_OSC *
                           ((2 * ((LPC_SC->PLL0STAT & 0x7FFF) + 1)))  /
                           (((LPC_SC->PLL0STAT >> 16) & 0xFF) + 1)    /
                           ((LPC_SC->CCLKCFG & 0xFF)+ 1));
         break;
       case 1:                                /* Main oscillator => PLL0       */
-        SystemCoreClock = (OSC_CLK * 
+        SystemCoreClock = (OSC_CLK *
                           ((2 * ((LPC_SC->PLL0STAT & 0x7FFF) + 1)))  /
                           (((LPC_SC->PLL0STAT >> 16) & 0xFF) + 1)    /
                           ((LPC_SC->CCLKCFG & 0xFF)+ 1));
         break;
       case 2:                                /* RTC oscillator => PLL0        */
-        SystemCoreClock = (RTC_CLK * 
+        SystemCoreClock = (RTC_CLK *
                           ((2 * ((LPC_SC->PLL0STAT & 0x7FFF) + 1)))  /
                           (((LPC_SC->PLL0STAT >> 16) & 0xFF) + 1)    /
                           ((LPC_SC->CCLKCFG & 0xFF)+ 1));
@@ -483,11 +500,16 @@ void SystemInit (void)
 {
 #if (CLOCK_SETUP)                       /* Clock Setup                        */
   LPC_SC->SCS       = SCS_Val;
-  if (SCS_Val & (1 << 5)) {             /* If Main Oscillator is enabled      */
+  if (LPC_SC->SCS & (1 << 5)) {             /* If Main Oscillator is enabled  */
     while ((LPC_SC->SCS & (1<<6)) == 0);/* Wait for Oscillator to be ready    */
   }
 
   LPC_SC->CCLKCFG   = CCLKCFG_Val;      /* Setup Clock Divider                */
+  /* Periphral clock must be selected before PLL0 enabling and connecting
+   * - according errata.lpc1768-16.March.2010 -
+   */
+  LPC_SC->PCLKSEL0  = PCLKSEL0_Val;     /* Peripheral Clock Selection         */
+  LPC_SC->PCLKSEL1  = PCLKSEL1_Val;
 
 #if (PLL0_SETUP)
   LPC_SC->CLKSRCSEL = CLKSRCSEL_Val;    /* Select Clock Source for PLL0       */
@@ -524,10 +546,6 @@ void SystemInit (void)
 #else
   LPC_SC->USBCLKCFG = USBCLKCFG_Val;    /* Setup USB Clock Divider            */
 #endif
-
-  LPC_SC->PCLKSEL0  = PCLKSEL0_Val;     /* Peripheral Clock Selection         */
-  LPC_SC->PCLKSEL1  = PCLKSEL1_Val;
-
   LPC_SC->PCONP     = PCONP_Val;        /* Power Control for Peripherals      */
 
   LPC_SC->CLKOUTCFG = CLKOUTCFG_Val;    /* Clock Output Configuration         */
@@ -536,4 +554,19 @@ void SystemInit (void)
 #if (FLASH_SETUP == 1)                  /* Flash Accelerator Setup            */
   LPC_SC->FLASHCFG  = FLASHCFG_Val;
 #endif
+
+//  Set Vector table offset value
+#if (__RAM_MODE__==1)
+  SCB->VTOR  = 0x10000000 & 0x3FFFFF80;
+#else
+  SCB->VTOR  = 0x00000000 & 0x3FFFFF80;
+#endif
 }
+
+/**
+ * @}
+ */
+
+/**
+ * @}
+ */

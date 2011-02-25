@@ -2,7 +2,7 @@
 PROJECT=mbed_test
 #  List of the objects files to be compiled/assembled
 OBJECTS=startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o 
-LSCRIPT=LPC17xx.ld
+LSCRIPT=ldscript_rom_gnu.ld
 
 OPTIMIZATION = 0
 DEBUG = -g
@@ -10,10 +10,11 @@ DEBUG = -g
 
 #  Compiler Options
 GCFLAGS = -Wall -fno-common -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) $(DEBUG)
+GCFLAGS += -D__RAM_MODE__=0
 #GCFLAGS += -Wcast-align -Wcast-qual -Wimplicit -Wpointer-arith -Wswitch
 #GCFLAGS += -Wredundant-decls -Wreturn-type -Wshadow -Wunused
 LDFLAGS = -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) -nostartfiles -Wl,-Map=$(PROJECT).map -T$(LSCRIPT)
-ASFLAGS = $(LISTING) -mcpu=cortex-m3
+ASFLAGS = $(LISTING) -mcpu=cortex-m3 --defsym RAM_MODE=0
 
 #  Compiler/Assembler/Linker Paths
 GCC = arm-none-eabi-gcc

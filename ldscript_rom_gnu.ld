@@ -18,7 +18,7 @@
 OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
 /*ENTRY(_start)*/
 SEARCH_DIR(.)
-GROUP(-lc)
+/*GROUP(-lc)*/
 
 MEMORY
 {

@@ -5,8 +5,8 @@
 /*****************************************************************************/
 
 
-/* 
-//*** <<< Use Configuration Wizard in Context Menu >>> *** 
+/*
+//*** <<< Use Configuration Wizard in Context Menu >>> ***
 */
 
 
@@ -36,7 +36,7 @@ __cs3_stack_mem:
 */
 
     .equ    Heap_Size,  0x00001000
-    
+
     .section ".heap", "w"
     .align  3
     .globl  __cs3_heap_start
@@ -106,6 +106,8 @@ __cs3_interrupt_vector_cortex_m:
     .long   MCPWM_IRQHandler            /* 46: Motor Control PWM            */
     .long   QEI_IRQHandler              /* 47: Quadrature Encoder Interface */
     .long   PLL1_IRQHandler             /* 48: PLL1 Lock (USB PLL)          */
+    .long	USBActivity_IRQHandler		/* 49: USB Activity 				*/
+    .long 	CANActivity_IRQHandler		/* 50: CAN Activity					*/
 
     .size   __cs3_interrupt_vector_cortex_m, . - __cs3_interrupt_vector_cortex_m
 
@@ -121,10 +123,30 @@ __cs3_interrupt_vector_cortex_m:
     .type   __cs3_reset_cortex_m, %function
 __cs3_reset_cortex_m:
     .fnstart
+.if (RAM_MODE)
+/* Clear .bss section (Zero init) */
+	MOV     R0, #0
+	LDR     R1, =__bss_start__
+	LDR     R2, =__bss_end__
+	CMP     R1,R2
+	BEQ     BSSIsEmpty
+LoopZI:
+	CMP     R1, R2
+	BHS		BSSIsEmpty
+	STR   	R0, [R1]
+	ADD		R1, #4
+	BLO     LoopZI
+BSSIsEmpty:
     LDR     R0, =SystemInit
     BLX     R0
     LDR     R0,=main
     BX      R0
+.else
+    LDR     R0, =SystemInit
+    BLX     R0
+    LDR     R0,=main
+    BX      R0
+.endif
     .pool
     .cantunwind
     .fnend
@@ -235,5 +257,7 @@ Default_Handler:
     IRQ     MCPWM_IRQHandler
     IRQ     QEI_IRQHandler
     IRQ     PLL1_IRQHandler
+    IRQ		USBActivity_IRQHandler
+    IRQ		CANActivity_IRQHandler
 
     .end
