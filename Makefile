@@ -46,6 +46,7 @@ clean:
 	$(REMOVE) $(PROJECT).elf
 	$(REMOVE) $(PROJECT).map
 	$(REMOVE) $(PROJECT).bin
+	$(REMOVE) $(PROJECT)_crt.lst
 	$(REMOVE) $(OBJECTS)
 
 #########################################################################
@@ -58,7 +59,7 @@ clean:
 .cpp.o :
 	$(GCC) $(GCFLAGS) -c $<
 
-.S.o :
-	$(AS) $(ASFLAGS) -o $(PROJECT)_crt.o $< > $(PROJECT)_crt.lst
+.s.o :
+	$(AS) $(ASFLAGS) -o $@ $< > $(PROJECT)_crt.lst
 
 #########################################################################
