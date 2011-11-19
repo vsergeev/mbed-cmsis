@@ -11,7 +11,7 @@
  * @par
  * ARM Limited (ARM) is supplying this software for use with Cortex-M 
  * processor based microcontrollers.  This file can be freely distributed 
- * within development tools that are supporting such ARM based processors. 
+ * within development tools that are supporting such ARM based processors.
  *
  * @par
  * THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
@@ -72,19 +72,21 @@ __INLINE static void LED_Off (uint32_t led) {
   MAIN function
  *----------------------------------------------------------------------------*/
 int main (void) {
+  /* Adjust SystemCoreClock global according to clock registers */
+  SystemCoreClockUpdate();
 
   if (SysTick_Config(SystemCoreClock / 1000)) { /* Setup SysTick Timer for 1 msec interrupts  */
     while (1);                                  /* Capture error */
   }
-  
-  LED_Config();                             
- 
+
+  LED_Config();
+
   while(1) {
     LED_On ((1<<18));                           /* Turn on the LED. */
     Delay (100);                                /* delay  100 Msec */
     LED_Off ((1<<18));                          /* Turn off the LED. */
     Delay (100);                                /* delay  100 Msec */
   }
-  
+
 }
 
