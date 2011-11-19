@@ -1,7 +1,7 @@
 #  Project Name
 PROJECT=mbed_barebones_test
 #  List of the objects files to be compiled/assembled
-OBJECTS=startup_LPC17xx.o main.o 
+OBJECTS=startup_LPC17xx.o main.o
 LSCRIPT=LPC17xx.ld
 
 OPTIMIZATION = 0
@@ -57,7 +57,7 @@ clean:
 .cpp.o :
 	$(GCC) $(GCFLAGS) -c $<
 
-.S.o :
-	$(AS) $(ASFLAGS) -o $(PROJECT)_crt.o $< > $(PROJECT)_crt.lst
+.s.o :
+	$(AS) $(ASFLAGS) -o $@ $< > $(PROJECT)_crt.lst
 
 #########################################################################
