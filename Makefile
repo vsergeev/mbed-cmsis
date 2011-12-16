@@ -1,7 +1,7 @@
 #  Project Name
 PROJECT=mbed_test
 #  List of the objects files to be compiled/assembled
-OBJECTS=startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o 
+OBJECTS=startup_LPC17xx.o core_cm3.o system_LPC17xx.o main_LPC17xx.o
 LSCRIPT=ldscript_rom_gnu.ld
 
 OPTIMIZATION = 0
@@ -60,6 +60,6 @@ clean:
 	$(GCC) $(GCFLAGS) -c $<
 
 .s.o :
-	$(AS) $(ASFLAGS) -o $@ $< > $(PROJECT)_crt.lst
+	$(AS) $(ASFLAGS) -o $@ $< > $(basename $@).lst
 
 #########################################################################

@@ -58,6 +58,6 @@ clean:
 	$(GCC) $(GCFLAGS) -c $<
 
 .s.o :
-	$(AS) $(ASFLAGS) -o $@ $< > $(PROJECT)_crt.lst
+	$(AS) $(ASFLAGS) -o $@ $< > $(basename $@).lst
 
 #########################################################################
