@@ -45,7 +45,7 @@ clean:
 	$(REMOVE) $(PROJECT).elf
 	$(REMOVE) $(PROJECT).map
 	$(REMOVE) $(PROJECT).bin
-	$(REMOVE) $(OBJECTS)
+	$(REMOVE) *.lst
 
 #########################################################################
 #  Default rules to compile .c and .cpp file to .o
