@@ -24,6 +24,15 @@
 
 #include "LPC17xx.h"
 
+/*
+ * To see how the LEDs are connected, see for instance:
+ * http://mbed.org/projects/libraries/svn/mbed/trunk/PinNames.h
+ */
+static const int LED1 = 1 << 18;   // LED1 = P1_18
+static const int LED2 = 1 << 20;   // LED2 = P1_20
+static const int LED3 = 1 << 21;   // LED3 = P1_21
+static const int LED4 = 1 << 22;   // LED4 = P1_22
+
 
 volatile uint32_t msTicks;                            /* counts 1ms timeTicks */
 /*----------------------------------------------------------------------------
@@ -82,9 +91,9 @@ int main (void) {
   LED_Config();
 
   while(1) {
-    LED_On ((1<<18));                           /* Turn on the LED. */
+    LED_On (LED1);                           /* Turn on the LED. */
     Delay (100);                                /* delay  100 Msec */
-    LED_Off ((1<<18));                          /* Turn off the LED. */
+    LED_Off (LED1);                          /* Turn off the LED. */
     Delay (100);                                /* delay  100 Msec */
   }
 
