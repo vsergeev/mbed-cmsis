@@ -31,7 +31,7 @@
 #define LED1 	(1<<18)		/* LED1 = P1_18 */
 #define LED2 	(1<<20)		/* LED2 = P1_20 */
 #define LED3 	(1<<21)		/* LED3 = P1_21 */
-#define LED4 	(1<<22)		/* LED4 = P1_22 */
+#define LED4 	(1<<23)		/* LED4 = P1_23 */
 
 volatile uint32_t msTicks;		/* counts 1ms timeTicks */
 
