@@ -9,7 +9,7 @@ DEBUG = -g
 #LISTING = -ahls
 
 #  Compiler Options
-GCFLAGS = -Wall -fno-common -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) $(DEBUG)
+GCFLAGS = -Wall -fno-common -mcpu=cortex-m3 -mthumb -I./ -O$(OPTIMIZATION) $(DEBUG)
 GCFLAGS += -D__RAM_MODE__=0
 #GCFLAGS += -Wcast-align -Wcast-qual -Wimplicit -Wpointer-arith -Wswitch
 #GCFLAGS += -Wredundant-decls -Wreturn-type -Wshadow -Wunused
