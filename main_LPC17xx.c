@@ -56,7 +56,7 @@ __INLINE static void Delay (uint32_t dlyTicks) {
   configer LED pins
  *------------------------------------------------------------------------------*/
 __INLINE static void LED_Config(void) {
-	LPC_GPIO1->FIODIR = 0xFFFFFFFF;		/* LEDs PORT1 are Output */
+	LPC_GPIO1->FIODIR = (LED1 | LED2 | LED3 | LED4);	/* LEDs PORT1 are Output */
 }
 
 /*------------------------------------------------------------------------------
