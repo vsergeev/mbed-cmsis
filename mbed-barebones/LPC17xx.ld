@@ -1,5 +1,5 @@
 /* Adapted for CortexM3 LPC1768, originally based on LPC21xx and LPC22xx User 
- * Manual UM10144, pg. 15. */
+ * Manual UM10114, pg. 15. */
 
 OUTPUT_FORMAT("elf32-littlearm")
 OUTPUT_ARCH(arm)
